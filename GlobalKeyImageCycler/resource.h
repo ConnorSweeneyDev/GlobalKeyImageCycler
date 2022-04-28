@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by HotKey.rc
+// Used by GlobalKeyImageCycler.rc
 //
 #define IDC_MYICON                      2
 #define IDD_HOTKEY_DIALOG               102

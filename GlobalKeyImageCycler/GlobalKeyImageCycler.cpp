@@ -1,5 +1,4 @@
 // HotKey.cpp : Defines the entry point for the application.
-//
 
 #include "framework.h"
 #include "GlobalKeyImageCycler.h"
@@ -20,10 +19,8 @@
 using namespace Gdiplus;
 #pragma comment (lib, "Gdiplus.lib")
 
-
 static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
 {
-
     if (uMsg == BFFM_INITIALIZED)
     {
         std::string tmp = (const char*)lpData;
@@ -68,8 +65,6 @@ std::string BrowseFolder(HWND hWnd, std::string saved_path)
     return "";
 }
 
-
-
 #define MAX_LOADSTRING 100
 
 // Global Variables:
@@ -97,12 +92,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
-
     ULONG_PTR token;
     GdiplusStartupInput input = { 0 };
     input.GdiplusVersion = 1;
     GdiplusStartup(&token, &input, NULL);
-    // TODO: Place code here.
 
     // Initialize global strings
     LoadStringA(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -114,7 +107,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     {
         return FALSE;
     }
-
 
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_HOTKEY));
 
@@ -130,7 +122,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
     }
 
-
     GdiplusShutdown(token);
 
     if(atomT)
@@ -140,7 +131,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     return (int) msg.wParam;
 }
-
 
 std::string from_wide_str(LPWSTR s) {
     CHAR buf[256]; // or whatever
@@ -160,16 +150,14 @@ std::string from_wide_str(LPWSTR s) {
 void set_window_title(HWND hWnd) {
     std::string name = _images[_current_image].filename().string().c_str();
 
-    std::string title = "Connor's Global Key Image Cycler v1.0 - " + name;
+    std::string title = "Global Key Image Cycler - " + name;
 
     ::SetWindowTextA(hWnd, title.c_str());
 }
 
-//
 //  FUNCTION: MyRegisterClass()
 //
 //  PURPOSE: Registers the window class.
-//
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEXA wcex;
@@ -183,7 +171,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hInstance      = hInstance;
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_HOTKEY));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
+    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+3);
     wcex.lpszMenuName   = MAKEINTRESOURCEA(IDC_HOTKEY);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
@@ -193,7 +181,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 void open_folder(std::filesystem::path images_path)
 {
-
     if (images_path.string().size())
     {
         _images.clear();
@@ -206,7 +193,7 @@ void open_folder(std::filesystem::path images_path)
             {
                 std::string name = dir_entry.path().filename().string();
 
-                if (name.substr(0, 3) == "img" && dir_entry.path().extension() == ".jpg")
+                if (name.substr(0, 3) == "img" && (dir_entry.path().extension() == ".jpg" || dir_entry.path().extension() == ".png" || dir_entry.path().extension() == ".gif"))
                 {
                     int id = atoi(name.substr(3).c_str());
 
@@ -215,11 +202,8 @@ void open_folder(std::filesystem::path images_path)
             }
         }
     }
-
 }
 
-
-//
 //   FUNCTION: InitInstance(HINSTANCE, int)
 //
 //   PURPOSE: Saves instance handle and creates main window
@@ -228,21 +212,20 @@ void open_folder(std::filesystem::path images_path)
 //
 //        In this function, we save the instance handle in a global variable and
 //        create and display the main program window.
-//
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
 
-   HWND hWnd = CreateWindowA(szWindowClass, "My Amazing Title", WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+   HWND hWnd = CreateWindowA(szWindowClass, "Title", WS_OVERLAPPEDWINDOW,
+      CW_USEDEFAULT, 0, 1920, 1080, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
       return FALSE;
    }
 
-   ATOM atomT = ::GlobalAddAtom("MyAmazingHotkeyT");
-   ATOM atomU = ::GlobalAddAtom("MyAmazingHotkeyU");
+   ATOM atomT = ::GlobalAddAtom("HotkeyT");
+   ATOM atomU = ::GlobalAddAtom("HotkeyU");
 
    bool b1 = ::RegisterHotKey(hWnd, atomT, MOD_SHIFT | MOD_ALT, 'T');
    bool b2 = ::RegisterHotKey(hWnd, atomU, MOD_SHIFT | MOD_ALT, 'U');
@@ -252,7 +235,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    }
    
    std::filesystem::path images_path;
-      // First command line argument should be the path to the folder that contains the 
+   // First command line argument should be the path to the folder that contains the 
    // image files.  These need to be .jpg files in the format of imgX.jpg where X
    // is a decimal number.  
 
@@ -272,8 +255,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    return TRUE;
 }
-
-
 
 void Example_DrawImage(HDC hdc, RECT& r)
 {
@@ -305,7 +286,6 @@ void Example_DrawImage(HDC hdc, RECT& r)
     graphics.DrawImage(&image, -(int)(newImageWidth-imageContainer.Width) / 2, -(int)(newImageHeight-imageContainer.Height) / 2, newImageWidth, newImageHeight);
 }
 
-//
 //  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
 //
 //  PURPOSE: Processes messages for the main window.
@@ -313,8 +293,6 @@ void Example_DrawImage(HDC hdc, RECT& r)
 //  WM_COMMAND  - process the application menu
 //  WM_PAINT    - Paint the main window
 //  WM_DESTROY  - post a quit message and return
-//
-//
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
