@@ -38,7 +38,7 @@ std::string BrowseFolder(HWND hWnd, std::string saved_path)
     const char* path_param = saved_path.c_str();
 
     BROWSEINFO bi = { 0 };
-    bi.lpszTitle = ("Browse for folder...");
+    bi.lpszTitle = ("Browse for folder containing your images...");
     bi.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE;
     bi.lpfn = BrowseCallbackProc;
     bi.lParam = (LPARAM)path_param;
@@ -217,7 +217,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hInst = hInstance; // Store instance handle in our global variable
 
    HWND hWnd = CreateWindowA(szWindowClass, "Title", WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, 1920, 1080, nullptr, nullptr, hInstance, nullptr);
+      CW_USEDEFAULT, 0, 1600, 950, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -300,7 +300,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
-            // Parse the menu selections:jhfdjhfd
+            // Parse the menu selections:
             switch (wmId)
             {
             case IDM_ABOUT:
@@ -323,7 +323,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Add any drawing code that uses hdc here...
 
             RECT r;
             ::GetClientRect(hWnd, &r);
